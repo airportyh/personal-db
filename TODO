@@ -1,2 +1,5 @@
 * relationship backlink from the other model
 * refactor the RelationshipsEditor
+* URL type
+* Improve the UI for schema editor
+* UI design improvements
