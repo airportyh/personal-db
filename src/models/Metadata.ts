@@ -14,9 +14,9 @@ RelationshipField;
 
 export const FIELD_TYPES = [
     "text",
-    "longtext",
-    "date",
-    "number",
+    // "longtext",
+    // "date",
+    // "number",
     "relationship"
 ];
 

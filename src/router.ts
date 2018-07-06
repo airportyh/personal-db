@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
-import ModelList from "./views/ModelList.vue";
-import ModelSchemaEditor from "./views/ModelSchemaEditor.vue";
-import ModelDataEditor from "./views/ModelDataEditor.vue";
-import ModelDataObjectEditor from "./views/ModelDataObjectEditor.vue";
+import SchemaList from "./views/schema/List.vue";
+import SchemaEdit from "./views/schema/Edit.vue";
+import DataList from "./views/data/List.vue";
+import DataEdit from "./views/data/Edit.vue";
 
 Vue.use(Router);
 
@@ -12,22 +12,22 @@ export default new Router({
     {
       path: "/",
       name: "model-list",
-      component: ModelList
+      component: SchemaList
     },
     {
-      path: "/models/:id/schema",
+      path: "/models/:modelName/schema",
       name: "model-schema-edit",
-      component: ModelSchemaEditor
+      component: SchemaEdit
     },
     {
-      path: "/models/:id/data",
+      path: "/models/:modelName/data",
       name: "model-data-edit",
-      component: ModelDataEditor
+      component: DataList
     },
     {
       path: "/models/:modelName/data/:id",
       name: "model-data-object-edit",
-      component: ModelDataObjectEditor
+      component: DataEdit
     }
   ],
 });

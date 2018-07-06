@@ -19,45 +19,44 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import firebase from "firebase/app";
-import { Model } from "../models/Metadata";
+import { Model } from "../../models/Metadata";
 import { Dictionary } from "lodash";
+import { API, ModelAPI } from "../../services/API";
 
 @Component
-export default class ModelDataEditor extends Vue {
+export default class DataList extends Vue {
     schema: Model | null = null;
     data: Dictionary<any> = {};
-    dataOnValueCallback: any;
-    schemaOnValueCallback: any;
 
-    getId(): string {
-        return this.$route.params.id;
+    get modelAPI(): ModelAPI {
+        return API.model(this.modelName);
     }
 
-    getSchemaRef(): firebase.database.Reference {
-        return firebase.database().ref(`models/${this.getId()}/schema`);
-    }
-
-    getDataRef(): firebase.database.Reference {
-        return firebase.database().ref(`models/${this.getId()}/data`);
+    get modelName(): string {
+        return this.$route.params.modelName;
     }
 
     created(): void {
-        this.dataOnValueCallback = this.getDataRef().on("value", (snapshot) => {
-            this.data = snapshot && snapshot.val() || {};
-        });
-        this.schemaOnValueCallback = this.getSchemaRef().on("value", (snapshot) => {
-            this.schema = snapshot && snapshot.val();
-        });
+        API.getSchema(this.modelName)
+            .then(schema => {
+                console.log("schema", schema);
+                this.schema = schema;
+            });
+        this.modelAPI
+            .getAll()
+            .then(data => {
+                console.log("data", data);
+                this.data = data || {};
+            });
     }
 
     addObject(): void {
-        const newObjectRef = this.getDataRef().push();
-        const id = newObjectRef.key;
+        const id = this.modelAPI.push();
         if (id) {
             this.$router.push({
                 name: "model-data-object-edit",
                 params: {
-                    modelName: this.getId(),
+                    modelName: this.modelName,
                     id: id
                 }
             });

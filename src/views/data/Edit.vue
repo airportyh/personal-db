@@ -25,9 +25,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import firebase from "firebase/app";
-import { Model, Field, RelationshipField } from "../models/Metadata";
+import { Model, Field, RelationshipField } from "../../models/Metadata";
 import * as _ from "lodash";
-import RelationshipsEditor from "../components/RelationshipsEditor.vue";
+import RelationshipsEditor from "../../components/RelationshipsEditor.vue";
+import { API, ModelAPI } from "../../services/API";
 
 interface Relationship {
     field: RelationshipField,
@@ -44,35 +45,35 @@ export default class ModelDataObjectEditor extends Vue {
     schema: Model | null = null;
     data: any = null;
 
-    getId(): string {
+    get id(): string {
         return this.$route.params.id;
     }
 
-    getModelName(): string {
+    get modelName(): string {
         return this.$route.params.modelName;
     }
 
-    getSchemaRef(): firebase.database.Reference {
-        return firebase.database().ref(`models/${this.getModelName()}/schema`);
-    }
-
-    getDataRef(): firebase.database.Reference {
-        return firebase.database().ref(`models/${this.getModelName()}/data/${this.getId()}`);
+    get modelAPI(): ModelAPI {
+        return API.model(this.modelName);
     }
 
     created(): void {
-        this.getSchemaRef().once("value", (snapshot) => {
-            this.schema = snapshot.val();
-        });
-        this.getDataRef().once("value", (snapshot) => {
-            this.data = snapshot.val() || {};
-        });
+        API.getSchema(this.modelName)
+            .then(schema => {
+                this.schema = schema;
+            });
+        this.modelAPI
+            .get(this.id)
+            .then(data => {
+                this.data = data || {};
+            });
     }
 
     save(): void {
-        this.getDataRef().set(this.data).then(() => {
-            console.log("It worked!");
-        });
+        this.modelAPI.save(this.id, this.data)
+            .then(() => {
+                console.log("It worked!");
+            });
     }
 }
 </script>
@@ -86,7 +87,7 @@ export default class ModelDataObjectEditor extends Vue {
     font-weight: bold;
 }
 
-input[type=text] {
+input[type=text], select {
     font-size: 100%;
 }
 
