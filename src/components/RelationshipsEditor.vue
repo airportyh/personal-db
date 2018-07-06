@@ -47,18 +47,12 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import firebase from "firebase/app";
 import { Model, Field, RelationshipField } from "../models/Metadata";
 import * as _ from "lodash";
+import { API, RelatedObject } from "../services/API";
 
 interface DropDownOption {
     value: string;
     label: string;
     isCreateNew: boolean;
-}
-
-interface RelatedObject {
-    linkId: string;
-    link: _.Dictionary<string>;
-    objectId: string;
-    object: object;
 }
 
 @Component
@@ -107,12 +101,9 @@ export default class RelationshipsEditor extends Vue {
             this.setDropDownOptions([]);
             return;
         }
-        const ref = firebase.database().ref(`models/${this.relatedModel.name}/data`)
-            .orderByChild(this.relatedModel.displayField)
-            .startAt(query)
-            .endAt(query + "\uf8ff")
-            .once("value", (snapshot) => {
-                const options = _(snapshot.val() || {}).chain()
+        API.searchRelatedObjects(this.relatedModel, query)
+            .then(relatedObjects => {
+                const options = _(relatedObjects).chain()
                     .entries()
                     .map(([key, obj]) => {
                         if (!this.relatedModel) {
@@ -133,15 +124,8 @@ export default class RelationshipsEditor extends Vue {
     }
 
     removeRelationship(relatedObject: RelatedObject): void {
-        console.log("removing relationship", relatedObject);
-        firebase.database().ref(`relationships/${this.field.relationshipName}/${relatedObject.linkId}`)
-            .remove()
-            .then(() => {
-                return this.fetchRelatedObjects(this.field);
-            })
-            .then((relatedObjects) => {
-                this.relatedObjects = relatedObjects;
-            });
+        API.unlinkRelationship(this.field, relatedObject.linkId)
+            .then(() => this.updateRelatedObjects());
     }
 
     selectOption(option: DropDownOption): void {
@@ -176,13 +160,6 @@ export default class RelationshipsEditor extends Vue {
         this.dropDownSelectionIndex = 0;
     }
 
-    onBlur(): void {
-        setTimeout(() => {
-            console.log("On blur");
-            this.setDropDownOptions([]);
-        }, 100);
-    }
-
     toAddMode(): void {
         this.addMode = true;
         this.$nextTick(() => {
@@ -191,42 +168,17 @@ export default class RelationshipsEditor extends Vue {
         });
     }
 
-    fetchRelatedObjects(field: RelationshipField): Promise<RelatedObject[]> {
-        return firebase.database().ref(`relationships/${field.relationshipName}`)
-            .orderByChild(this.parentModel.name)
-            .equalTo(this.parentId)
-            .once("value")
-            .then((snapshot) => {
-                const links = snapshot.val();
-                console.log("links", links);
-                return Promise.all(
-                    _.map(links, (link: _.Dictionary<string>, linkId) => {
-                        const id = link[field.relatedModelName];
-                        return firebase.database().ref(`models/${field.relatedModelName}/data/${id}`)
-                            .once("value")
-                            .then((snapshot) => {
-                                const val = snapshot.val();
-                                return {
-                                    linkId: linkId,
-                                    link: link,
-                                    objectId: id,
-                                    object: val
-                                } as RelatedObject;
-                            });
-                    })
-                );
-            });
+    fetchRelatedObjects(): Promise<RelatedObject[]> {
+        return API.fetchRelatedObjects(this.parentModel, this.field, this.parentId);
     }
 
     fetchRelationship(field: RelationshipField): Promise<void> {
         return Promise.all([
-            firebase.database().ref(`models/${field.relatedModelName}/schema`).once("value"),
-            this.fetchRelatedObjects(field)
-        ]).then(([relatedModelSnapshot, relatedObjects]) => {
-            this.relatedModel = relatedModelSnapshot.val();
-            console.log("related objects", relatedObjects);
+            API.getSchema(field.relatedModelName),
+            this.fetchRelatedObjects()
+        ]).then(([relatedModel, relatedObjects]) => {
+            this.relatedModel = relatedModel;
             this.relatedObjects = relatedObjects;
-            console.log("related objects", this.relatedObjects);
         });
     }
 
@@ -234,45 +186,29 @@ export default class RelationshipsEditor extends Vue {
         if (!this.relatedModel) {
             return;
         }
-        const newRelationshipRef = firebase.database().ref(`relationships/${this.field.relationshipName}`).push()
-        newRelationshipRef.set({
-            [this.parentModel.name]: this.parentId,
-            [this.relatedModel.name]: id
-        }).then(() => {
-            this.fetchRelatedObjects(this.field)
-                .then((relatedObjects) => {
-                    this.relatedObjects = relatedObjects;
-                    this.query = "";
-                });
-        });
+        API.pushRelationship(this.parentModel, this.field, this.parentId, id)
+            .then(() => this.updateRelatedObjects());
     }
 
     addRelatedObject(): void {
-        const value = this.query;
-        //console.log(`Adding ${field.name} ${value}.`);
-        const relatedModel = this.relatedModel;
-        if (!relatedModel) {
+        if (!this.relatedModel) {
             return;
         }
-        const newObjectRef = firebase.database().ref(`models/${relatedModel.name}/data`).push();
         const newObject = {
-            [relatedModel.displayField]: value
+            [this.relatedModel.displayField]: this.query
         };
-        
-        const newRelationshipRef = firebase.database().ref(`relationships/${this.field.relationshipName}`).push()
-        Promise.all([
-            newObjectRef.set(newObject),
-            newRelationshipRef.set({
-                [this.parentModel.name]: this.parentId,
-                [relatedModel.name]: newObjectRef.key
-            })
-        ]).then(() => {
-            this.fetchRelatedObjects(this.field)
-                .then((relatedObjects) => {
-                    this.relatedObjects = relatedObjects;
-                    this.query = "";
-                });
-        });
+
+        API.model(this.relatedModel.name).push(newObject)
+            .then((newId) => API.pushRelationship(this.parentModel, this.field, this.parentId, newId))
+            .then(() => this.updateRelatedObjects());
+    }
+
+    updateRelatedObjects(): void {
+        this.fetchRelatedObjects()
+            .then((relatedObjects) => {
+                this.relatedObjects = relatedObjects;
+                this.query = "";
+            });
     }
 }
 </script>
@@ -286,10 +222,6 @@ export default class RelationshipsEditor extends Vue {
     display: block;
     position: absolute;
     pointer-events: none;
-}
-
-input[type=text], .dropdown ul {
-    width: 300px;
 }
 
 .dropdown ul {

@@ -35,7 +35,7 @@ export default class SchemaList extends Vue {
         this.$router.push({
             name: "model-schema-edit",
             params: {
-                id: key
+                modelName: key
             }
         });
     }

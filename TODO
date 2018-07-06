@@ -1,5 +1,10 @@
-* relationship backlink from the other model
 * refactor the RelationshipsEditor
-* URL type
-* Improve the UI for schema editor
-* UI design improvements
+* view mode
+* URL field
+* improve buttons look and feel
+* put in real data
+
+* autosave
+
+* date field
+* other field types

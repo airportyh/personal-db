@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
-import SchemaList from "./views/schema/List.vue";
-import SchemaEdit from "./views/schema/Edit.vue";
-import DataList from "./views/data/List.vue";
-import DataEdit from "./views/data/Edit.vue";
+import SchemaList from "./views/schema/SchemaList.vue";
+import SchemaEdit from "./views/schema/SchemaEdit.vue";
+import DataList from "./views/data/DataList.vue";
+import DataEdit from "./views/data/DataEdit.vue";
 
 Vue.use(Router);
 

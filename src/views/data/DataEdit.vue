@@ -13,7 +13,7 @@
 
             <RelationshipsEditor
                 v-if="field.type === 'relationship'"
-                v-bind:parentId="getId()"
+                v-bind:parentId="id"
                 v-bind:parentModel="schema"
                 v-bind:field="field"
             />
