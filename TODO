@@ -1,8 +1,7 @@
-* refactor the RelationshipsEditor
-* view mode
-* URL field
-* improve buttons look and feel
+* delete data from UI
 * put in real data
+* improve buttons look and feel
+* refactor the RelationshipsEditor more
 
 * autosave
 
