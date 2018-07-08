@@ -5,7 +5,15 @@
             <ul v-if="relatedObjects">
                 <li v-for="relatedObject in relatedObjects"
                     v-bind:key="relatedObject.linkId">
-                    {{ relatedObject.object[relatedModel.displayField] }}
+                    <router-link :to="{
+                        name: 'model-data-object-edit',
+                        params: {
+                            id: relatedObject.objectId,
+                            modelName: relatedModel.name
+                        }
+                    }">
+                        {{ relatedObject.object[relatedModel.displayField] }}
+                    </router-link>
                     <i class="delete fas fa-trash-alt"
                         v-on:click="removeRelationship(relatedObject)"></i>
                 </li>
@@ -13,14 +21,13 @@
             <p v-if="Object.keys(relatedObjects).length === 0">
                 No {{ relatedModel.name }}s are currently linked to this {{ parentModel.name }}.
             </p>
-            <button type="button" v-on:click="toAddMode" v-if="!addMode">
+            <span class="link-like" v-if="!addMode" type="button" v-on:click="toAddMode">
                 Add {{ relatedModel.name | capitalize }}
-            </button>
+            </span>
             <div v-show="addMode">
                 <input ref="textInput" type="text" v-model="query"
                     v-on:keyup="onKeyUp($event)"
                     v-on:keydown="onKeyDown($event)"
-                    
                     >
                 <div class="dropdown" v-if="this.query.length > 0">
                     <ul>
@@ -44,7 +51,6 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import firebase from "firebase/app";
 import { Model, Field, RelationshipField } from "../models/Metadata";
 import * as _ from "lodash";
 import { API, RelatedObject } from "../services/API";
@@ -60,6 +66,7 @@ export default class RelationshipsEditor extends Vue {
     @Prop() parentId: string;
     @Prop() parentModel: Model;
     @Prop() field: RelationshipField;
+    @Prop() editMode: boolean;
     addMode: boolean = false;
     relatedModel: Model | null = null;
     relatedObjects: RelatedObject[] | null = null;

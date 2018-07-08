@@ -51,13 +51,13 @@ export default class DataList extends Vue {
     }
 
     addObject(): void {
-        const id = this.modelAPI.push();
-        if (id) {
+        const ref = this.modelAPI.getNewRef();
+        if (ref.key) {
             this.$router.push({
                 name: "model-data-object-edit",
                 params: {
                     modelName: this.modelName,
-                    id: id
+                    id: ref.key
                 }
             });
         } else {

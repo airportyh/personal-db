@@ -22,4 +22,11 @@ body {
 label {
   font-weight: bold;
 }
+
+.link-like {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: smaller;
+}
 </style>

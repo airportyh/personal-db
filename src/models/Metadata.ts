@@ -1,3 +1,7 @@
+export type TextField = { name: string, type: "text", size?: number };
+
+export type URLField = { name: string, type: "url", size?: number };
+
 export type RelationshipField = {
     name: string,
     type: "relationship",
@@ -5,15 +9,19 @@ export type RelationshipField = {
     relatedModelName: string
 };
 
+export type ChoiceField = { name: string, type: "choice", choices: string[] };
+
+
+
 export type Field =
-{ name: string, type: "text", size?: number } |
-{ name: string, type: "longtext", columns?: number, rows?: number } |
-{ name: string, type: "date" } |
-{ name: string, type: "number", max?: number, min?: number } |
+TextField |
+ChoiceField |
 RelationshipField;
 
 export const FIELD_TYPES = [
     "text",
+    "url",
+    "choice",
     // "longtext",
     // "date",
     // "number",

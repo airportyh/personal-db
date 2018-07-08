@@ -44,22 +44,31 @@
                             </select>
                         </td>
                         <td>
-                            <span v-if="field.type==='relationship'">
-                                <label>Relationship Name:</label><br>
-                                <input type="text" v-model="field.relationshipName"><br>
-                            </span>
+                            <div  v-if="field.type==='relationship'">
+                                <span>
+                                    <label>Relationship Name:</label><br>
+                                    <input type="text" v-model="field.relationshipName"><br>
+                                </span>
 
-                            <span v-if="field.type==='relationship'">
-                                <label>Related Model:</label><br>
-                                <select v-model="field.relatedModelName">
-                                    <option v-for="otherModel in otherModels"
-                                            v-bind:key="otherModel.name"
-                                            v-bind:value="otherModel.name">
-                                        {{ otherModel.name }}
-                                    </option>
-                                </select>
-                                <br>
-                            </span>
+                                <span>
+                                    <label>Related Model:</label><br>
+                                    <select v-model="field.relatedModelName">
+                                        <option v-for="otherModel in otherModels"
+                                                v-bind:key="otherModel.name"
+                                                v-bind:value="otherModel.name">
+                                            {{ otherModel.name }}
+                                        </option>
+                                    </select>
+                                    <br>
+                                </span>
+                            </div>
+
+                            <ChoiceEditor
+                                v-if="field.type === 'choice'"
+                                v-bind:field="field"
+                                >
+                            </ChoiceEditor>
+                            
                         </td>
                         <td>
                             <div class="move-up fas fa-arrow-up" v-on:click="moveUp(index)"></div>
@@ -82,12 +91,16 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import firebase from "firebase/app";
 import { API } from "../../services/API";
 import { Model, FIELD_TYPES, RelationshipField, Field } from "../../models/Metadata";
+import ChoiceEditor from "./ChoiceEditor.vue";
 import * as _ from "lodash";
 
-@Component
+@Component({
+    components: {
+        ChoiceEditor
+    }
+})
 export default class SchemaEdit extends Vue {
     model: Model | null = null;
     otherModels: _.Dictionary<Model> | null = null;

@@ -33,11 +33,6 @@ export class ModelAPI {
         return fetchRef(`data/models/${this.modelName}/${id}`);
     }
 
-    getNewKey<T>(): string | null {
-        const newObjectRef = this.getNewRef();
-        return newObjectRef.key;
-    }
-
     getNewRef<T>(): firebase.database.Reference {
         return ref(`data/models/${this.modelName}`).push();
     }

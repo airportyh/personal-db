@@ -1,15 +1,26 @@
 <template>
-    <form v-if="data && schema" v-on:submit.prevent="save">
-        <h1>{{ schema.name | capitalize }} object editor</h1>
+    <div v-if="data && schema">
+        <h1>{{ schema.name | capitalize }}: {{ data[schema.displayField] }}</h1>
         <div
             v-for="(field, index) in schema.fields"
             v-bind:key="index"
             class="field"
             >
-            <div v-if="field.type === 'text'">
-                <label>{{ field.name | capitalize }}:</label><br>
-                <input type="text" v-model="data[field.name]">
-            </div>
+
+            <UITextField
+                v-if="field.type === 'text' || field.type === 'url'"
+                v-bind:field="field"
+                v-bind:data="data"
+                v-on:change="save">
+            </UITextField>
+
+            <UIChoiceField
+                v-if="field.type === 'choice'"
+                v-bind:field="field"
+                v-bind:data="data"
+                v-on:change="save"
+                >
+            </UIChoiceField>
 
             <RelationshipsEditor
                 v-if="field.type === 'relationship'"
@@ -17,17 +28,18 @@
                 v-bind:parentModel="schema"
                 v-bind:field="field"
             />
+
         </div>
-        <button type="submit">Save</button>
-    </form>
+    </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import firebase from "firebase/app";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { Model, Field, RelationshipField } from "../../models/Metadata";
 import * as _ from "lodash";
 import RelationshipsEditor from "../../components/RelationshipsEditor.vue";
+import UITextField from "../../components/UITextField.vue";
+import UIChoiceField from "../../components/UIChoiceField.vue";
 import { API, ModelAPI } from "../../services/API";
 
 interface Relationship {
@@ -38,7 +50,9 @@ interface Relationship {
 
 @Component({
     components: {
-        RelationshipsEditor
+        RelationshipsEditor,
+        UITextField,
+        UIChoiceField
     }
 })
 export default class ModelDataObjectEditor extends Vue {
@@ -57,7 +71,7 @@ export default class ModelDataObjectEditor extends Vue {
         return API.model(this.modelName);
     }
 
-    created(): void {
+    load(): void {
         API.getSchema(this.modelName)
             .then(schema => {
                 this.schema = schema;
@@ -69,11 +83,20 @@ export default class ModelDataObjectEditor extends Vue {
             });
     }
 
+    created(): void {
+        this.load();
+    }
+
     save(): void {
         this.modelAPI.save(this.id, this.data)
             .then(() => {
                 console.log("It worked!");
             });
+    }
+
+    @Watch("$route")
+    onRouteChanged(val: string, oldVal: string): void {
+        this.load();
     }
 }
 </script>
