@@ -4,14 +4,9 @@ import router from "./router";
 import firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
+import firebaseConfig from "./firebase-config";
 
 Vue.config.productionTip = false;
-
-const firebaseConfig = {
-  databaseURL: "https://personal-db-ef6ad.firebaseio.com/",
-  projectId: "personal-db-ef6ad",
-  apiKey: "AIzaSyBAr3gScou0yYapiRJR_iRzePjg5x7fwek"
-};
 
 firebase.initializeApp(firebaseConfig);
 
