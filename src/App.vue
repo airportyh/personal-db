@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
@@ -24,9 +21,20 @@ label {
 }
 
 .link-like {
-  color: blue;
+  color: #666;
   text-decoration: underline;
   cursor: pointer;
-  font-size: smaller;
+}
+
+.link-like:hover {
+  color: black;
+}
+
+.nav-link {
+  margin-right: 10px;
+}
+
+input[type=text], input[type=password], select {
+    font-size: 100%;
 }
 </style>

@@ -207,9 +207,6 @@ export default class SchemaEdit extends Vue {
 </script>
 
 <style>
-input[type=text], select {
-    font-size: 100%;
-}
 
 button {
     font-size: 100%;

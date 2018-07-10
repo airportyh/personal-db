@@ -1,11 +1,10 @@
 <template>
     <div>
-        <h1>Model List</h1>
+        <h1>Schemas</h1>
         <ul>
             <li v-for="(schema, modelName) in schemas"
                 v-bind:key="modelName">
-                {{schema.name}}
-                (<router-link :to="{ name: 'model-schema-edit', params: { modelName } }">schema</router-link>)
+                <router-link :to="{ name: 'model-schema-edit', params: { modelName } }">{{ schema.name | capitalize}} Schema</router-link>
                 (<router-link :to="{ name: 'model-data-edit', params: { modelName } }">data</router-link>)
             </li>
         </ul>

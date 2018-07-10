@@ -1,9 +1,10 @@
-* delete data from UI
+* authentication
+* deployment and deployment story
+* auto-generated relationship names
 * put in real data
+* delete data from UI
+* markdown editing
 * improve buttons look and feel
 * refactor the RelationshipsEditor more
 
-* autosave
-
 * date field
-* other field types

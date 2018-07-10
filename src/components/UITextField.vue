@@ -7,7 +7,7 @@
                 target="_blank">
                 {{ data[field.name] }}
             </a>
-            <span v-if="field.type === 'text'">{{ data[field.name] }}</span>
+            <span v-if="field.type === 'text'">{{ data[field.name] || '(N/A)' }}</span>
             &nbsp;
             <span class="link-like" v-on:click="toEditMode">Edit</span>
         </div>

@@ -1,6 +1,6 @@
 <template>
     <div v-if="schema && data">
-        <h1>{{schema.name}} Data</h1>
+        <h1>{{schema.name | capitalize}}s</h1>
         <ul>
             <li v-for="(object, id) in data"
                 v-bind:key="id">
@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import firebase from "firebase/app";
 import { Model } from "../../models/Metadata";
 import { Dictionary } from "lodash";
@@ -36,7 +36,7 @@ export default class DataList extends Vue {
         return this.$route.params.modelName;
     }
 
-    created(): void {
+    load(): void {
         API.getSchema(this.modelName)
             .then(schema => {
                 console.log("schema", schema);
@@ -48,6 +48,10 @@ export default class DataList extends Vue {
                 console.log("data", data);
                 this.data = data || {};
             });
+    }
+
+    created(): void {
+        this.load();
     }
 
     addObject(): void {
@@ -63,6 +67,11 @@ export default class DataList extends Vue {
         } else {
             throw new Error("Something wrong happened :(");
         }
+    }
+
+    @Watch("$route")
+    onRouteChange(): void {
+        this.load();
     }
 }
 </script>

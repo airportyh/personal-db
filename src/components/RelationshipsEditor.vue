@@ -5,14 +5,16 @@
             <ul v-if="relatedObjects">
                 <li v-for="relatedObject in relatedObjects"
                     v-bind:key="relatedObject.linkId">
-                    <router-link :to="{
-                        name: 'model-data-object-edit',
-                        params: {
-                            id: relatedObject.objectId,
-                            modelName: relatedModel.name
-                        }
-                    }">
-                        {{ relatedObject.object[relatedModel.displayField] }}
+                    {{ relatedObject.object[relatedModel.displayField] }}
+                    <router-link
+                        :to="{
+                            name: 'model-data-object-edit',
+                            params: {
+                                id: relatedObject.objectId,
+                                modelName: relatedModel.name
+                            }
+                        }">
+                        <i class="fas fa-link"></i>
                     </router-link>
                     <i class="delete fas fa-trash-alt"
                         v-on:click="removeRelationship(relatedObject)"></i>
@@ -22,7 +24,7 @@
                 No {{ relatedModel.name }}s are currently linked to this {{ parentModel.name }}.
             </p>
             <span class="link-like" v-if="!addMode" type="button" v-on:click="toAddMode">
-                Add {{ relatedModel.name | capitalize }}
+                <i class="fas fa-plus"></i>{{ relatedModel.name | capitalize }}
             </span>
             <div v-show="addMode">
                 <input ref="textInput" type="text" v-model="query"
@@ -243,6 +245,7 @@ export default class RelationshipsEditor extends Vue {
     list-style: none;
     padding: 0.2em 0.5em;
     margin: 0;
+    cursor: pointer;
 }
 
 .dropdown li:nth-child(2n) {
