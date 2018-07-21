@@ -11,17 +11,19 @@ export type RelationshipField = {
 
 export type ChoiceField = { name: string, type: "choice", choices: string[] };
 
-
+export type MarkdownField = { name: string, type: "markdown" };
 
 export type Field =
 TextField |
 ChoiceField |
-RelationshipField;
+RelationshipField |
+MarkdownField;
 
 export const FIELD_TYPES = [
     "text",
     "url",
     "choice",
+    "markdown",
     // "longtext",
     // "date",
     // "number",

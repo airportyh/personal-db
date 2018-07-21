@@ -14,6 +14,13 @@
                 v-on:change="save">
             </UITextField>
 
+            <UIMarkdownField
+                v-if="field.type === 'markdown'"
+                v-bind:field="field"
+                v-bind:data="data"
+                v-on:change="save">
+            </UIMarkdownField>
+
             <UIChoiceField
                 v-if="field.type === 'choice'"
                 v-bind:field="field"
@@ -40,6 +47,7 @@ import * as _ from "lodash";
 import RelationshipsEditor from "../../components/RelationshipsEditor.vue";
 import UITextField from "../../components/UITextField.vue";
 import UIChoiceField from "../../components/UIChoiceField.vue";
+import UIMarkdownField from "../../components/UIMarkdownField.vue";
 import { API, ModelAPI } from "../../services/API";
 
 interface Relationship {
@@ -52,7 +60,8 @@ interface Relationship {
     components: {
         RelationshipsEditor,
         UITextField,
-        UIChoiceField
+        UIChoiceField,
+        UIMarkdownField
     }
 })
 export default class ModelDataObjectEditor extends Vue {

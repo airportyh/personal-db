@@ -1,6 +1,9 @@
 <template>
     <div>
-        <label>{{ field.name | capitalize }}:</label><br>
+        <label>{{ field.name | capitalize }}:</label>
+        &nbsp;
+        <span class="link-like" v-on:click="toEditMode">Edit</span>
+        <br>
         <div v-if="!editMode">
             <a  v-if="field.type === 'url'"
                 v-bind:href="data[field.name]"
@@ -8,8 +11,6 @@
                 {{ data[field.name] }}
             </a>
             <span v-if="field.type === 'text'">{{ data[field.name] || '(N/A)' }}</span>
-            &nbsp;
-            <span class="link-like" v-on:click="toEditMode">Edit</span>
         </div>
         <form v-if="editMode" v-on:submit.prevent="change">
             <input ref="textInput" type="text" v-model="data[field.name]">

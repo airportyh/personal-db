@@ -1,10 +1,9 @@
-* authentication
-* deployment and deployment story
+* date field
 * auto-generated relationship names
 * put in real data
 * delete data from UI
-* markdown editing
-* improve buttons look and feel
+* authorization - let other people view
 * refactor the RelationshipsEditor more
 
-* date field
+* improve buttons look and feel
+
