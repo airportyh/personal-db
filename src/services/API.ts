@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import { Model, RelationshipField } from "@/models/Metadata";
+import { Model, RelationshipField } from "../models/Metadata";
 import * as _ from "lodash";
 
 export function ref(path: string): firebase.database.Reference {

@@ -92,7 +92,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { API } from "../../services/API";
-import { Model, FIELD_TYPES, RelationshipField, Field } from "../../models/Metadata";
+import { Model, RelationshipField, Field } from "../../models/Metadata";
+import { FIELD_TYPES } from "../../models/Metadata.fields";
 import ChoiceEditor from "./ChoiceEditor.vue";
 import * as _ from "lodash";
 

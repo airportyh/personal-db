@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { ChoiceField } from "@/models/Metadata";
+import { ChoiceField } from "../../models/Metadata";
 
 @Component
 export default class ChoiceEditor extends Vue {

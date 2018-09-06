@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { Model } from "@/models/Metadata";
+import { Model } from "../models/Metadata";
 import { API } from "../services/API";
 import firebase from "firebase/app";
 

@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { TextField } from "@/models/Metadata";
+import { TextField } from "../models/Metadata";
 
 @Component
 export default class UITextField extends Vue {

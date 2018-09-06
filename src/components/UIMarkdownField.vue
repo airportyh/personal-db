@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
-import { TextField } from "@/models/Metadata";
+import { TextField } from "../models/Metadata";
 import * as marked from "marked";
 import MarkdownEditor from "./MarkdownEditor.vue";
 

@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { ChoiceField } from "@/models/Metadata";
+import { ChoiceField } from "../models/Metadata";
 
 @Component
 export default class UIChoiceField extends Vue {
