@@ -38,7 +38,7 @@ export default class UIMarkdownField extends Vue {
     editMode: boolean = false;
 
     get markdown(): string {
-        return this.data[this.field.name];
+        return this.data[this.field.name] || "";
     }
 
     set markdown(markdown) {
