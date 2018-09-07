@@ -35,7 +35,12 @@ import MarkdownEditor from "./MarkdownEditor.vue";
 export default class UIMarkdownField extends Vue {
     @Prop() field: TextField;
     @Prop() data: any;
+    html: string = "";
     editMode: boolean = false;
+
+    created(): void {
+        this.html = marked(this.markdown);
+    }
 
     get markdown(): string {
         return this.data[this.field.name] || "";
@@ -43,10 +48,7 @@ export default class UIMarkdownField extends Vue {
 
     set markdown(markdown) {
         this.data[this.field.name] = markdown;
-    }
-
-    get html(): string {
-        return marked(this.markdown);
+        this.html = marked(markdown);
     }
 
     save(): void {
