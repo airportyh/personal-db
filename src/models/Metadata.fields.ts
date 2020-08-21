@@ -6,5 +6,7 @@ export const FIELD_TYPES = [
     // "longtext",
     // "date",
     // "number",
-    "relationship"
+    "relationship",
+    "parent",
+    "child"
 ];

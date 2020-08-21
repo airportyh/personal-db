@@ -12,6 +12,19 @@
                     <label>Display Field:</label><br>
                     <input type="text" v-model="model.displayField">
                 </p>
+                
+                <p>
+                    <label>Sort Field:</label><br>
+                    <input type="text" v-model="model.sortField">
+                </p>
+                
+                <p>
+                    <label>Sort Direction:</label><br>
+                    <select v-model="model.sortDirection">
+                        <option value="ASC">Ascending</option>
+                        <option value="DESC">Descending</option>
+                    </select>
+                </p>
             </div>
         </div>
 
@@ -43,7 +56,7 @@
                                 </option>
                             </select>
                         </td>
-                        <td>
+                        <td class="extra-settings">
                             <div  v-if="field.type==='relationship'">
                                 <span>
                                     <label>Relationship Name:</label><br>
@@ -69,7 +82,18 @@
                                 >
                             </ChoiceEditor>
                             
+                            <div v-if="field.type === 'parent'">
+                                <label>Parent Model: &nbsp;</label>
+                                <select v-model="field.parentModelName">
+                                    <option v-for="otherModel in otherModels"
+                                            v-bind:key="otherModel.name"
+                                            v-bind:value="otherModel.name">
+                                        {{ otherModel.name }}
+                                    </option>
+                                </select>
+                            </div>
                         </td>
+
                         <td>
                             <div class="move-up fas fa-arrow-up" v-on:click="moveUp(index)"></div>
                             <div class="move-down fas fa-arrow-down" v-on:click="moveDown(index)"></div>

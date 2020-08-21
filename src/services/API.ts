@@ -10,8 +10,28 @@ export function fetch<T>(ref: firebase.database.Query): Promise<T> {
     return ref.once("value").then(s => s.val());
 }
 
+export function fetchArray<T>(ref: firebase.database.Query): Promise<T[]> {
+    return ref.once("value").then(s => {
+        const retval: T[] = [];
+        s.forEach((child) => {
+            const obj = child.val();
+            obj.id = child.key;
+            retval.push(obj);
+        });
+        return retval;
+    });
+}
+
 export function fetchRef<T>(path: string): Promise<T> {
     return fetch(ref(path));
+}
+
+export function fetchArrayRef<T>(path: string, sortField?: string): Promise<T[]> {
+    if (sortField) {
+        return fetchArray(ref(path).orderByChild(sortField));
+    } else {
+        return fetchArray(ref(path));
+    }
 }
 
 export interface RelatedObject {
@@ -25,8 +45,8 @@ export class ModelAPI {
 
     constructor(private modelName: string) {}
 
-    getAll<T>(): Promise<_.Dictionary<T>> {
-        return fetchRef(`data/models/${this.modelName}`);
+    getAll<T>(sortField?: string): Promise<T[]> {
+        return fetchArrayRef(`data/models/${this.modelName}`, sortField);
     }
 
     get<T>(id: string): Promise<T> {

@@ -13,14 +13,30 @@ export type ChoiceField = { name: string, type: "choice", choices: string[] };
 
 export type MarkdownField = { name: string, type: "markdown" };
 
+export type ParentField = {
+    name: string, 
+    type: "parent", 
+    parentModelName: string
+};
+
+export type ChildField = {
+    name: string,
+    type: "child",
+    childModelName: string;
+};
+
 export type Field =
 TextField |
 ChoiceField |
 RelationshipField |
-MarkdownField;
+MarkdownField |
+ParentField |
+ChildField;
 
 export interface Model {
     name: string;
     displayField: string;
+    sortField: string;
+    sortDirection: "DESC" | "ASC";
     fields: Field[];
 }

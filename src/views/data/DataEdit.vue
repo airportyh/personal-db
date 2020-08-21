@@ -36,6 +36,12 @@
                 v-bind:field="field"
             />
 
+            <div
+                v-if="field.type === 'parent'"
+            >
+                <label>{{ field.name | capitalize }}:</label>
+            </div>
+
         </div>
     </div>
 </template>
@@ -80,16 +86,10 @@ export default class ModelDataObjectEditor extends Vue {
         return API.model(this.modelName);
     }
 
-    load(): void {
-        API.getSchema(this.modelName)
-            .then(schema => {
-                this.schema = schema;
-            });
-        this.modelAPI
-            .get(this.id)
-            .then(data => {
-                this.data = data || {};
-            });
+    async load(): void {
+        this.schema = await API.getSchema(this.modelName);
+        const data = await this.modelAPI.get(this.id);
+        this.data = data || {};
     }
 
     created(): void {
