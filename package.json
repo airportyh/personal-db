@@ -18,7 +18,7 @@
     "firebase": "^5.1.0",
     "i": "^0.3.6",
     "lodash": "^4.17.10",
-    "marked": "^0.4.0",
+    "marked": "^4.0.10",
     "npm": "^6.1.0",
     "simplemde": "^1.11.2",
     "v-autocomplete": "^1.8.2",
